@@ -18,10 +18,6 @@ public class MainActivity extends Activity {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
-	private Camera mCamera;
-    PictureCallback mPicture = null;
-
-
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		//keeps the camera on
@@ -33,9 +29,6 @@ public class MainActivity extends Activity {
 		card1.setFootnote("Cool! ...");
 		View card1View = card1.getView();
 		setContentView(card1View);
-
-		//take a picture intent
-		//takePicture();
 
 	}
 /**
@@ -82,16 +75,6 @@ public class MainActivity extends Activity {
 	    super.onActivityResult(requestCode, resultCode, data);
 	}
 
-
-	/**
-	 * end of boiler plate
-	 */
-
-
-	public void takePic() {
-	    // get an image from the camera
-		mCamera.takePicture(null, null, mPicture);
-	}
 	/*
 	 * end of boiler plate
 	 */
