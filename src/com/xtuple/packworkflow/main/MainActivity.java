@@ -1,4 +1,4 @@
-package com.example.glass.main;
+package com.xtuple.packworkflow.main;
 
 import com.google.android.glass.app.Card;
 import android.app.Activity;
