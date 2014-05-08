@@ -1,21 +1,24 @@
-glass-camera
-============
+google-glass-boiler plate
+===========
 
-simple google glass camera app for demo
+Template to get you started on your next Google Glass Project and Steps to creating your next glass App.
 
-What
-----
-this uses the camera intent to take a picture and store it 'silently' 
-a preview picture will be given after and it will deposit into your pictures.
-Found the traditional camera taking pictues would clutter the view stream when I wanted it to just go away
+Features
+---
+- Voice Trigger defined in  res/values/strings.xml as glass_voice_trigger
+- AppName is defined in  res/values/strings.xml as app_name
+- Easy to change package name in AndroidManifest.xml -> and change all instances of com.example.glass
+    - suggested to change to com.YOURCOMPANY.glass
+    - make sure to change manifest activities names
 
-Also more glass code on the web never hurts. 
+Updating
+---
+Change
+- AndroidManifest.XML
+- SRC/* Folder Names
+- SRC/COM/GLASS/MAIN/MainActivity.java to new Package Name
 
-Usage
------
-invoke using, 'ok, glass simple camera'  
 
-ToDo
-----
-File explorer
-filters
+NOTE
+---
+In XE16 Forward, your Voice Trigger is the APP NAME itself.

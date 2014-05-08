@@ -1,4 +1,4 @@
-package com.example.glasswareXE12.main;
+package com.example.glass.main;
 
 import com.google.android.glass.app.Card;
 import android.app.Activity;
@@ -13,33 +13,33 @@ import android.provider.MediaStore;
 
 
 public class MainActivity extends Activity {
-	
+
 // create variable instances
-	
+
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private Camera mCamera;
     PictureCallback mPicture = null;
 
-	
-	protected void onCreate(Bundle savedInstanceState){	
+
+	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		//keeps the camera on 
+		//keeps the camera on
 	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-	    
-		
+
+
 		Card card1 = new Card(this);
 		card1.setText("Nice Picture!");
 		card1.setFootnote("Cool! ...");
 		View card1View = card1.getView();
 		setContentView(card1View);
-		
-	
-		takePicture();
-		
+
+		//take a picture intent
+		//takePicture();
+
 	}
 /**
- * Boiler plate google code 
+ * Boiler plate google code
  */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -53,9 +53,9 @@ public class MainActivity extends Activity {
 	    }
 	}
 
-	
-	
-	/*** boiler plate google code 
+
+
+	/*** boiler plate google code
 	 * https://developers.google.com/glass/develop/gdk/media-camera/camera
 	 */
 	@Override
@@ -64,11 +64,11 @@ public class MainActivity extends Activity {
 	    // Re-acquire the camera and start the preview.
 	}
 	private static final int TAKE_PICTURE_REQUEST = 1;
-	
+
 	public void takePicture() {
 	    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    startActivityForResult(intent, TAKE_PICTURE_REQUEST);
-	    
+
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 
 
 	/**
-	 * end of boiler plate 
+	 * end of boiler plate
 	 */
 
 
@@ -93,6 +93,6 @@ public class MainActivity extends Activity {
 		mCamera.takePicture(null, null, mPicture);
 	}
 	/*
-	 * end of boiler plate 
+	 * end of boiler plate
 	 */
 }
