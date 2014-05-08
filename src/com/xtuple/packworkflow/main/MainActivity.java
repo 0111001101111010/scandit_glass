@@ -1,15 +1,14 @@
 package com.xtuple.packworkflow.main;
 
 import com.google.android.glass.app.Card;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.*;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.os.Bundle;
-import android.hardware.Camera.PictureCallback;
-import android.provider.MediaStore;
 
 
 public class MainActivity extends Activity {
@@ -25,8 +24,8 @@ public class MainActivity extends Activity {
 
 
 		Card card1 = new Card(this);
-		card1.setText("Nice Picture!");
-		card1.setFootnote("Cool! ...");
+		card1.setText("Welcome to PackWorkflow!!");
+		card1.setFootnote("xTuple");
 		View card1View = card1.getView();
 		setContentView(card1View);
 
