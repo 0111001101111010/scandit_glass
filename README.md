@@ -17,8 +17,12 @@ Change
 - AndroidManifest.XML
 - SRC/* Folder Names
 - SRC/COM/GLASS/MAIN/MainActivity.java to new Package Name
+- change res/drawable* to change icons.
 
-
-NOTE
+NOTE and tips
 ---
-In XE16 Forward, your Voice Trigger is the APP NAME itself.
+- In XE16 Forward, your Voice Trigger is the APP NAME itself.
+- Record a video of your glass Use this toolhttp://googleglassfans.com/archives/3814/record-google-glass-screen-using-adb/
+
+MIT
+---
