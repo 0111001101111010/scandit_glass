@@ -78,6 +78,17 @@ public class MainActivity extends Activity {
 //	                CameraManager.EXTRA_PICTURE_FILE_PATH);
 //	        processPictureWhenReady(picturePath);
 	    }
+	    else if (requestCode == SCANDIT_CODE_REQUEST && resultCode == RESULT_OK){
+       		Log.d("before","SCANDIT_CODE_REQUEST");
+    		String contents = data.getStringExtra("SCAN_RESULT");
+           	Log.d("after","SCANDIT_CODE_REQUEST");
+            Card newCard = new Card(this);
+            newCard.setImageLayout(Card.ImageLayout.FULL);
+    		newCard.setText(contents);
+    		newCard.setFootnote("xTuple");
+    		View card1View1 = newCard.getView();
+    		setContentView(card1View1);
+	    }
 
 	    super.onActivityResult(requestCode, resultCode, data);
 	}
