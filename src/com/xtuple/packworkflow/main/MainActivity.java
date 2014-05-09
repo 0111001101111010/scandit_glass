@@ -47,8 +47,6 @@ public class MainActivity extends Activity {
 	    }
 	}
 
-
-
 	/*** boiler plate google code
 	 * https://developers.google.com/glass/develop/gdk/media-camera/camera
 	 */
@@ -61,14 +59,9 @@ public class MainActivity extends Activity {
 
 	public void scanBarcode(){
  Intent i = new Intent(getApplicationContext(), ScanditSDKDemoSimple.class);
-		i.putExtra("new_variable_name","value");
+		i.putExtra("VariableParameter","Value");
 		startActivityForResult(i, SCANDIT_CODE_REQUEST);
-		Log.d("@@@@", "2-TAP");
-	}
-	public void takePicture() {
-	    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-	    startActivityForResult(intent, TAKE_PICTURE_REQUEST);
-
+		Log.d("@@@@", "Asking for Barcode");
 	}
 
 	@Override
