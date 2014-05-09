@@ -3,12 +3,17 @@ package com.xtuple.packworkflow.main;
 import com.google.android.glass.app.Card;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+//import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.touchpad.Gesture;
 
 
 public class MainActivity extends Activity {
@@ -16,6 +21,7 @@ public class MainActivity extends Activity {
 // create variable instances
 
 	private static final String TAG = MainActivity.class.getSimpleName();
+    private GestureDetector mGestureDetector;
 	private static final int SCANDIT_CODE_REQUEST =2;
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -28,8 +34,7 @@ public class MainActivity extends Activity {
 		card1.setFootnote("xTuple");
 		View card1View = card1.getView();
 		setContentView(card1View);
-		scanBarcode();
-
+		mGestureDetector = createGestureDetector(this);
 	}
 /**
  * Boiler plate google code
@@ -82,4 +87,92 @@ public class MainActivity extends Activity {
 	/*
 	 * end of boiler plate
 	 */
+    private GestureDetector createGestureDetector(Context context) {
+    GestureDetector gestureDetector = new GestureDetector(context);
+        //Create a base listener for generic gestures
+        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
+            @Override
+            public boolean onGesture(Gesture gesture) {
+                if (gesture == Gesture.TAP) {
+                	Log.d("@@@@", "TAP");
+									scanBarcode();
+                    // do something on tap
+                    return true;
+                } else if (gesture == Gesture.TWO_TAP) {
+                    // do something on two finger tap
+                	Log.d("@@@@", "2-TAP");
+                	return true;
+                } else if (gesture == Gesture.SWIPE_RIGHT) {
+                    // do something on right (forward) swipe
+                	Log.d("@@@@", "SWIPE_RIGHT");
+                	return true;
+                } else if (gesture == Gesture.SWIPE_LEFT) {
+                    // do something on left (backwards) swipe
+                	Log.d("@@@@", "SWIPE_LEFT");
+                	return true;
+                }
+                else if (gesture == Gesture.LONG_PRESS) {
+                    // do something on left (backwards) swipe
+                	Log.d("@@@@", "LONG_PRESS");
+                	return true;
+                }
+                else if (gesture == Gesture.THREE_LONG_PRESS) {
+                    // do something on left (backwards) swipe
+                	Log.d("@@@@", "THREE_LONG_PRESS");
+                	return true;
+                }
+                else if (gesture == Gesture.THREE_TAP) {
+                	Log.d("@@@@", "THREE_TAP");
+                	return true;
+                }
+                else if (gesture == Gesture.TWO_LONG_PRESS) {
+                	Log.d("@@@@", "TWO_LONG_PRESS");
+                	return true;
+                }
+                else if (gesture == Gesture.TWO_SWIPE_DOWN) {
+                	Log.d("@@@@", "TWO_SWIPE_DOWN");
+                	return true;
+                }
+                else if (gesture == Gesture.TWO_SWIPE_LEFT) {
+                	Log.d("@@@@", "TWO_SWIPE_LEFT");
+                	return true;
+                }
+                else if (gesture == Gesture. TWO_SWIPE_RIGHT) {
+                	Log.d("@@@@", " TWO_SWIPE_RIGHT");
+                	return true;
+                }
+                else if (gesture == Gesture. TWO_SWIPE_UP) {
+                	Log.d("@@@@", " TWO_SWIPE_UP");
+                	return true;
+                }
+                return false;
+            }
+        });
+        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
+            @Override
+            public void onFingerCountChanged(int previousCount, int currentCount) {
+              // do something on finger count changes
+            }
+        });
+        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
+            @Override
+            public boolean onScroll(float displacement, float delta, float velocity) {
+
+            	return true;
+                // do something on scrolling
+            }
+        });
+        return gestureDetector;
+    }
+
+    /*
+     * Send generic motion events to the gesture detector
+     */
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (mGestureDetector != null) {
+            return mGestureDetector.onMotionEvent(event);
+        }
+        return false;
+    }
 }
