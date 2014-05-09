@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,7 +17,7 @@ public class MainActivity extends Activity {
 // create variable instances
 
 	private static final String TAG = MainActivity.class.getSimpleName();
-
+	private static final int SCANDIT_CODE_REQUEST =2;
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		//keeps the camera on
@@ -28,6 +29,7 @@ public class MainActivity extends Activity {
 		card1.setFootnote("xTuple");
 		View card1View = card1.getView();
 		setContentView(card1View);
+		scanBarcode();
 
 	}
 /**
@@ -57,6 +59,12 @@ public class MainActivity extends Activity {
 	}
 	private static final int TAKE_PICTURE_REQUEST = 1;
 
+	public void scanBarcode(){
+ Intent i = new Intent(getApplicationContext(), ScanditSDKDemoSimple.class);
+		i.putExtra("new_variable_name","value");
+		startActivityForResult(i, SCANDIT_CODE_REQUEST);
+		Log.d("@@@@", "2-TAP");
+	}
 	public void takePicture() {
 	    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	    startActivityForResult(intent, TAKE_PICTURE_REQUEST);
