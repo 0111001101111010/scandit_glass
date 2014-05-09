@@ -54,7 +54,6 @@ public class MainActivity extends Activity {
 	    super.onResume();
 	    // Re-acquire the camera and start the preview.
 	}
-	private static final int TAKE_PICTURE_REQUEST = 1;
 
 	public void scanBarcode(){
  Intent i = new Intent(getApplicationContext(), ScanditSDKDemoSimple.class);
@@ -65,12 +64,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == TAKE_PICTURE_REQUEST && resultCode == RESULT_OK) {
-//	        String picturePath = data.getStringExtra(
-//	                CameraManager.EXTRA_PICTURE_FILE_PATH);
-//	        processPictureWhenReady(picturePath);
-	    }
-	    else if (requestCode == SCANDIT_CODE_REQUEST && resultCode == RESULT_OK){
+		if (requestCode == SCANDIT_CODE_REQUEST && resultCode == RESULT_OK){
        		Log.d("before","SCANDIT_CODE_REQUEST");
     		String contents = data.getStringExtra("SCAN_RESULT");
            	Log.d("after","SCANDIT_CODE_REQUEST");
