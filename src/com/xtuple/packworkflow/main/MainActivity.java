@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
 
 // create variable instances
 
-	private static final String TAG = MainActivity.class.getSimpleName();
     private GestureDetector mGestureDetector;
 	private static final int SCANDIT_CODE_REQUEST =2;
 	protected void onCreate(Bundle savedInstanceState){
@@ -109,40 +108,6 @@ public class MainActivity extends Activity {
                 } else if (gesture == Gesture.SWIPE_LEFT) {
                     // do something on left (backwards) swipe
                 	Log.d("@@@@", "SWIPE_LEFT");
-                	return true;
-                }
-                else if (gesture == Gesture.LONG_PRESS) {
-                    // do something on left (backwards) swipe
-                	Log.d("@@@@", "LONG_PRESS");
-                	return true;
-                }
-                else if (gesture == Gesture.THREE_LONG_PRESS) {
-                    // do something on left (backwards) swipe
-                	Log.d("@@@@", "THREE_LONG_PRESS");
-                	return true;
-                }
-                else if (gesture == Gesture.THREE_TAP) {
-                	Log.d("@@@@", "THREE_TAP");
-                	return true;
-                }
-                else if (gesture == Gesture.TWO_LONG_PRESS) {
-                	Log.d("@@@@", "TWO_LONG_PRESS");
-                	return true;
-                }
-                else if (gesture == Gesture.TWO_SWIPE_DOWN) {
-                	Log.d("@@@@", "TWO_SWIPE_DOWN");
-                	return true;
-                }
-                else if (gesture == Gesture.TWO_SWIPE_LEFT) {
-                	Log.d("@@@@", "TWO_SWIPE_LEFT");
-                	return true;
-                }
-                else if (gesture == Gesture. TWO_SWIPE_RIGHT) {
-                	Log.d("@@@@", " TWO_SWIPE_RIGHT");
-                	return true;
-                }
-                else if (gesture == Gesture. TWO_SWIPE_UP) {
-                	Log.d("@@@@", " TWO_SWIPE_UP");
                 	return true;
                 }
                 return false;
