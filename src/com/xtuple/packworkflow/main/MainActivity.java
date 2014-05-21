@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 //import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity {
 	public List<String> descriptions  = new ArrayList<String>();
 	public List<String> uuids  = new ArrayList<String>();
 	public String obj;
+    private TextToSpeech mSpeech;
 	
     private GestureDetector mGestureDetector;
 	private static final int SCANDIT_CODE_REQUEST =2;
@@ -43,6 +45,15 @@ public class MainActivity extends Activity {
 	    makeCard(this,"Hello","World");
 		makeRequest(that);
 		
+		//speech
+        mSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                // Do nothing.
+             mSpeech.speak("Welcome to ex two pull", TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
+        //gesture detector 
 		mGestureDetector = createGestureDetector(this);
 	}
 	
@@ -134,8 +145,8 @@ public class MainActivity extends Activity {
     		setContentView(card1View1);	
     		
                	Log.d("start","");
-           //WebRequest.issueOrder(new AsyncHttpResponseHandler(),params);
-            final Activity foo = this;
+               	//WebRequest.issueOrder(new AsyncHttpResponseHandler(),params);
+          final Activity foo = this;
           WebRequest.issueOrder(new AsyncHttpResponseHandler() {
         	            @Override
         	            public void onStart() {
@@ -315,16 +326,12 @@ public class MainActivity extends Activity {
         }
         return false;
     }
+    @Override
+    public void onDestroy() {
+        mSpeech.shutdown();
+        mSpeech = null;
+
+        super.onDestroy();
+    }
     
-
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode,
-//	        Intent data) {
-//		if (requestCode == SCANDIT_CODE_REQUEST && resultCode == RESULT_OK){
-//           //scandit activity
-// 
-//	    } 
-//	    super.onActivityResult(requestCode, resultCode, data);
-//	}
-
 }
