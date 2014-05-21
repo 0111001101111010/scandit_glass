@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.WindowManager;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.touchpad.Gesture;
-
-
+import com.loopj.android.http.*;
+import org.json.*;
 public class MainActivity extends Activity {
 
 // create variable instances
@@ -33,8 +33,38 @@ public class MainActivity extends Activity {
 		card1.setFootnote("xTuple");
 		View card1View = card1.getView();
 		setContentView(card1View);
+		//javascript that
+		final Activity that = this;
+		makeRequest(that);
+		
 		mGestureDetector = createGestureDetector(this);
 	}
+	
+	private void makeRequest(final Activity that){
+        WebRequest.getOrders(new AsyncHttpResponseHandler() {
+        	
+            @Override
+            public void onStart() {
+                // Initiated the request
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                // Successfully got a response
+            }
+
+            @Override
+            public void onFailure(Throwable e, String response) {
+                // Response failed :(
+            }
+
+            @Override
+            public void onFinish() {
+                // Completed the request (either success or failure)\
+            }
+        });
+
+	};
 /**
  * Boiler plate google code
  */
@@ -94,7 +124,7 @@ public class MainActivity extends Activity {
             public boolean onGesture(Gesture gesture) {
                 if (gesture == Gesture.TAP) {
                 	Log.d("@@@@", "TAP");
-									scanBarcode();
+					scanBarcode();
                     // do something on tap
                     return true;
                 } else if (gesture == Gesture.TWO_TAP) {
