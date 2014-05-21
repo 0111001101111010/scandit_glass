@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -142,20 +143,19 @@ public class MainActivity extends Activity {
             params.put("quantity", "1");
     		makeCard(this,"Issued","");
     		
-               	Log.d("start","");
-               	//WebRequest.issueOrder(new AsyncHttpResponseHandler(),params);
-          final Activity foo = this;
+          final Activity that = this;
           WebRequest.issueOrder(new AsyncHttpResponseHandler() {
         	            @Override
         	            public void onStart() {
         	                // Initiated the request
-        	                Card newCard = new Card(foo);
-        	                newCard.setImageLayout(Card.ImageLayout.FULL);
-        	        		newCard.setText("Issuing....");
-        	        		newCard.setFootnote("xTuple");
-        	        		View card1View1 = newCard.getView();
-        	        		setContentView(card1View1);
-        		               	Log.d("start","");
+        	            	makeCard(that,"Sending Request...","xTuple");
+        	            	//wait to make sure request was processed 
+        	                Handler handler = new Handler(); 
+        	                handler.postDelayed(new Runnable() { 
+        	                     public void run() { 
+        	                    	 //random waiting
+        	                     } 
+        	                }, 2000); 
         	            }
 
         	            @Override
@@ -170,81 +170,8 @@ public class MainActivity extends Activity {
 
         	            @Override
         	            public void onFinish() {
-        	                // Completed the request (either success or failure)
-        		    	        WebRequest.getOrders(new AsyncHttpResponseHandler() {
-        		    	            @Override
-        		    	            public void onStart() {
-        		    	                // Initiated the request
-
-        		    	                Card newCard = new Card(foo);
-        		    	                newCard.setImageLayout(Card.ImageLayout.FULL);
-        		    	        		newCard.setText("Loading Next Line Item....");
-        		    	        		newCard.setFootnote("xTuple");
-        		    	        		View card1View1 = newCard.getView();
-        		    	        		setContentView(card1View1);
-        		    		               	Log.d("start","");
-        		    		                mSpeech.speak("Loading Next Line Item....", TextToSpeech.QUEUE_FLUSH, null);
-        		    	            }
-
-        		    	            @Override
-        		    	            public void onSuccess(String response) {
-        		    	                // Successfully got a response
-        		    	            	obj = response;
-        		    	            	if (!"No Issuable Items!".equals(response)){
-        		    	                    try{
-        		    	                        barcodes  = XtupleRestClient.getIssueToShippingAtShipping(response);
-        		    	                        descriptions = XtupleRestClient.getIssueToShippingDescriptions(response);       
-        		    	                      // uuids = XtupleRestClient.getOrderUUIDs();
-        		    	                        uuids = XtupleRestClient.getOrderUUIDs(response);
-        		    	                                                    
-        		    	                        //add them
-        		    			                Card newCard = new Card(foo);
-        		    			                newCard.setImageLayout(Card.ImageLayout.FULL);
-        		    		                    newCard.setText(descriptions.get(0));
-        		    			        		newCard.setFootnote("xTuple");
-        		    			        		View card1View1 = newCard.getView();
-        		    			        		setContentView(card1View1);
-        		    			        		
-        		    			               mSpeech.speak("Next Line Item Ready", TextToSpeech.QUEUE_FLUSH, null);
-        		    	                    }
-        		    	                    catch (Exception e) {
-        		    	         				// TODO Auto-generated catch block
-        		    	            			throw new RuntimeException(e);
-        		    	         				
-        		    	         			}
-        		    	                 }
-        		    	                 else{
-        		    	         		    //mlsText.add("No Issuable Items!");
-        		    		                Card newCard = new Card(foo);
-        		    		                newCard.setImageLayout(Card.ImageLayout.FULL);
-        		    	                     newCard.setText("Order Complete, No more Issuable Items!");
-        		    		        		newCard.setFootnote("xTuple");
-        		    		        		View card1View1 = newCard.getView();
-        		    		        		setContentView(card1View1);
-        		    		                mSpeech.speak("Order Complete, No more Issuable Items!", TextToSpeech.QUEUE_FLUSH, null);
-        		    	                 }		
-        		    	            	
-        		    	            		
-        		    	            }
-
-        		    	            @Override
-        		    	            public void onFailure(Throwable e, String response) {
-        		    	                // Response failed :(
-        		    	            	try {
-        		    						throw e;
-        		    					} catch (Throwable e1) {
-        		    						// TODO Auto-generated catch block
-        		    						e1.printStackTrace();
-        		    					}
-        		    	               //	Log.d("fail",response);
-        		    	            }
-
-        		    	            @Override
-        		    	            public void onFinish() {
-        		    	               	Log.d("finish","");
-        		    	                // Completed the request (either success or failure)
-        		    	            }
-        		    	        });
+        	            	//refresh the list and grab next item
+        	            	getIssuable(that);
         	            }
         	        }, params);
                 Log.v("@@@@","IssueToShipping");				
@@ -344,9 +271,76 @@ public class MainActivity extends Activity {
 
         super.onDestroy();
     }
+    //recognize speech
 	private void displaySpeechRecognizer() {
 	    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 	    startActivityForResult(intent, SPEECH_REQUEST);
 	}
-    //recognize speech
+ 
+	
+	private void getIssuable(final Activity that){
+        WebRequest.getOrders(new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+        		makeCard(that,"Loading...","xTuple");
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                // Successfully got a response
+            	obj = response;
+            	if (!"No Issuable Items!".equals(response)){
+                    try{
+                        barcodes  = XtupleRestClient.getIssueToShippingAtShipping(response);
+                        descriptions = XtupleRestClient.getIssueToShippingDescriptions(response); 
+                        uuids = XtupleRestClient.getOrderUUIDs(response);
+                        int size = XtupleRestClient.numLineItems(response);
+                        double weight = XtupleRestClient.getWeight(response);
+                        int position= XtupleRestClient.getIssuetoShippingLinePosition(response, uuids.get(0));
+                        //add them
+                        String footer = "Total Weight: " + weight + "- Line items "+ position + " of total " + size;
+		        		makeCard(that,descriptions.get(0),footer);
+		        		
+		                mSpeech.speak("line items are available to be issued.", TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                    catch (Exception e) {
+         				// TODO Auto-generated catch block
+            			throw new RuntimeException(e);
+         				
+         			}
+                 }
+                 else{
+         		    //mlsText.add("No Issuable Items!");
+		        	makeCard(that,"No More Issuable Orders Exiting!","xTuple");
+	                mSpeech.speak("No More Issuable Orders Exiting!", TextToSpeech.QUEUE_FLUSH, null);
+	                //exit the app
+	                Handler handler = new Handler(); 
+	                handler.postDelayed(new Runnable() { 
+	                     public void run() { 
+	                          finish();
+	                     } 
+	                }, 5000); 
+                 }		
+            	
+            }
+
+            @Override
+            public void onFailure(Throwable e, String response) {
+                // Response failed :(
+            	try {
+					throw e;
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+               //	Log.d("fail",response);
+            }
+
+            @Override
+            public void onFinish() {
+               	Log.d("finish","");
+                // Completed the request (either success or failure)
+            }
+        });		
+	}
 }
