@@ -45,9 +45,9 @@ public class MainActivity extends Activity {
 
 		//javascript that
 		final Activity that = this;
-	    makeCard(this,"Hello","World");
-		makeRequest(that);
-		
+//	    makeCard(this,"Hello","World");
+//		makeRequest(that);
+		getIssuable(that);
 		//speech
         mSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -136,56 +136,58 @@ public class MainActivity extends Activity {
 			String check = XtupleRestClient.onPacklist(obj,contents);
 			//its on the list
 			if(!check.equals("NOPE")){
-                //startActivity(new Intent(this, StopStopWatchActivity.class));
-    				//selected
-            RequestParams params = new RequestParams();
-            params.put("uuid", check);
-            params.put("quantity", "1");
-    		makeCard(this,"Issued","");
+	            RequestParams params = new RequestParams();
+	            params.put("uuid", check);
+	            params.put("quantity", "1");
+	    		makeCard(this,"Issued","");
     		
-          final Activity that = this;
-          WebRequest.issueOrder(new AsyncHttpResponseHandler() {
-        	            @Override
-        	            public void onStart() {
-        	                // Initiated the request
-        	            	makeCard(that,"Sending Request...","xTuple");
-        	            	//wait to make sure request was processed 
+			          final Activity that = this;
+			          WebRequest.issueOrder(new AsyncHttpResponseHandler() {
+			        	            @Override
+			        	            public void onStart() {
+			        	                // Initiated the request
+			        	            	makeCard(that,"Sending Request...","xTuple");
+			        	            	//wait to make sure request was processed 
+			        	                Handler handler = new Handler(); 
+			        	                handler.postDelayed(new Runnable() { 
+			        	                     public void run() { 
+			        	                    	 //random waiting
+			        	                     } 
+			        	                }, 2000); 
+			        	            }
+			
+			        	            @Override
+			        	            public void onSuccess(String response) {
+			        	                // Successfully got a response
+			        	                mSpeech.speak("success, next item", TextToSpeech.QUEUE_FLUSH, null);
+			        	            }
+			
+			        	            @Override
+			        	            public void onFailure(Throwable e, String response) {
+			        	                // Response failed :(
+			        	            }
+			
+			        	            @Override
+			        	            public void onFinish() {
+			        	            	//refresh the list and grab next item
+			        	            	getIssuable(that);
+			        	            }
+			        	        }, params);
+			                Log.v("@@@@","IssueToShipping");				
+						}
+						else{
+        	            	makeCard(this,"That line item is not on this order, please check again","xTuple");
+        	            	//grab list
+        	            	final Activity that = this;
         	                Handler handler = new Handler(); 
         	                handler.postDelayed(new Runnable() { 
         	                     public void run() { 
-        	                    	 //random waiting
+        	        	            getIssuable(that);
         	                     } 
-        	                }, 2000); 
-        	            }
-
-        	            @Override
-        	            public void onSuccess(String response) {
-        	                // Successfully got a response
-        	            }
-
-        	            @Override
-        	            public void onFailure(Throwable e, String response) {
-        	                // Response failed :(
-        	            }
-
-        	            @Override
-        	            public void onFinish() {
-        	            	//refresh the list and grab next item
-        	            	getIssuable(that);
-        	            }
-        	        }, params);
-                Log.v("@@@@","IssueToShipping");				
-			}
-			else{
-			//it isn't
-    	        Card newCard = new Card(this);
-    	        newCard.setImageLayout(Card.ImageLayout.FULL);
-    			newCard.setText("That line item is not on this order, please check again");
-				newCard.setFootnote("xTuple");
-				View card1View1 = newCard.getView();
-				setContentView(card1View1);	
-			}
-			} catch (IOException e) {
+        	                }, 5000);
+						}
+			} 
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(e);	
 		}
@@ -302,12 +304,12 @@ public class MainActivity extends Activity {
 		        		makeCard(that,descriptions.get(0),footer);
 		        		
 		                mSpeech.speak("line items are available to be issued.", TextToSpeech.QUEUE_FLUSH, null);
-                    }
-                    catch (Exception e) {
+                    	}
+                    catch (Exception e) 
+                    	{
          				// TODO Auto-generated catch block
             			throw new RuntimeException(e);
-         				
-         			}
+                    	}
                  }
                  else{
          		    //mlsText.add("No Issuable Items!");
