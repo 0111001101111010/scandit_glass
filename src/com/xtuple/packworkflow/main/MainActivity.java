@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 //import android.view.GestureDetector;
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
 	
     private GestureDetector mGestureDetector;
 	private static final int SCANDIT_CODE_REQUEST =2;
+	private static final int SPEECH_REQUEST = 1;
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		//keeps the camera on
@@ -85,10 +87,12 @@ public class MainActivity extends Activity {
 	
 	void makeCard(Activity that, String body, String footer){
 		Card card1 = new Card(that);
+        card1.setImageLayout(Card.ImageLayout.FULL);
 		card1.setText(body);
 		card1.setFootnote(footer);
 		View card1View = card1.getView();
 		setContentView(card1View);
+  
 	};
 /**
  * Boiler plate google code
@@ -136,13 +140,7 @@ public class MainActivity extends Activity {
             RequestParams params = new RequestParams();
             params.put("uuid", check);
             params.put("quantity", "1");
-            
-            Card newCard = new Card(this);
-            newCard.setImageLayout(Card.ImageLayout.FULL);
-    		newCard.setText("Issued");
-    		newCard.setFootnote("xTuple");
-    		View card1View1 = newCard.getView();
-    		setContentView(card1View1);	
+    		makeCard(this,"Issued","");
     		
                	Log.d("start","");
                	//WebRequest.issueOrder(new AsyncHttpResponseHandler(),params);
@@ -265,6 +263,17 @@ public class MainActivity extends Activity {
 			throw new RuntimeException(e);	
 		}
 	    }
+		else if (requestCode == SPEECH_REQUEST && resultCode == RESULT_OK) {
+	        List<String> results = data.getStringArrayListExtra(
+	                RecognizerIntent.EXTRA_RESULTS);
+	        String spokenText = results.get(0);
+	        makeCard(this,spokenText,"foo");
+	        //issue line
+	        //issue partial
+	        	//quantity
+	        //scan
+
+	    }
 
 	    super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -286,6 +295,8 @@ public class MainActivity extends Activity {
                 } else if (gesture == Gesture.TWO_TAP) {
                     // do something on two finger tap
                 	Log.d("@@@@", "2-TAP");
+                	displaySpeechRecognizer();
+                	
                 	return true;
                 } else if (gesture == Gesture.SWIPE_RIGHT) {
                     // do something on right (forward) swipe
@@ -333,5 +344,9 @@ public class MainActivity extends Activity {
 
         super.onDestroy();
     }
-    
+	private void displaySpeechRecognizer() {
+	    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+	    startActivityForResult(intent, SPEECH_REQUEST);
+	}
+    //recognize speech
 }
